@@ -11,6 +11,11 @@ NDK_BUILD_PARAMS := NDK_PROJECT_PATH=. NDK_APPLICATION_MK=Application.mk
 
 OUT = obj/local/arm64-v8a
 ASMS = $(OUT)/asms
+ifeq ($(UNAME_S), Darwin)
+SED = @sed -i ''
+else
+SED = @sed -i
+endif
 
 all: bins asms ios
 	@echo done
@@ -24,15 +29,15 @@ $(ASMS)/bw_mem.s: $(OUT)/objs/bw_mem/__/src/bw_mem.s
 	@mkdir -p $(dir $@)
 	@echo Generating $@
 	@python convert_asm.py $^ > $@
-	@sed -i '' 's/_stderr/___stderrp/' $@
-	@sed -i '' 's/fprintf/fprintf_d/' $@
+	@$(SED) 's/_stderr/___stderrp/' $@
+	@$(SED) 's/fprintf/fprintf_d/' $@
 
 $(ASMS)/lat_mem_rd.s: $(OUT)/objs/lat_mem_rd/__/src/lat_mem_rd.s
 	@mkdir -p $(dir $@)
 	@echo Generating $@
 	@python convert_asm.py $^ > $@
-	@sed -i '' 's/stride_initialize/_&/' $@
-	@sed -i '' 's/_stderr/___stderrp/' $@
+	@$(SED) 's/stride_initialize/_&/' $@
+	@$(SED) 's/_stderr/___stderrp/' $@
 	@perl -pi -e 's/fprintf/$$& . ++$$n/ge' $@
 
 ios:
