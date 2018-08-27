@@ -18,11 +18,19 @@ COMMON_CFLAGS = \
 	-Wno-unused-variable -Wno-unused-command-line-argument \
 	-Wno-return-type -Wno-logical-op-parentheses \
 	-Wno-comment -Wno-format -Wno-format-extra-args
+
 COMMON_LDFLAGS = -Wno-deprecated
 
-include $(THEOS)/makefiles/common.mk
+ifneq ($(ALPS),)
+  COMMON_CFLAGS += -Dsysconf=ios_sysconf -DHAVE_BINDPROCESSOR
+  COMMON_CFLAGS += -Iinc
+  COMMON_LDFLAGS += -L$(ALPS) -lalps_core
+endif
 
 ARCHS = arm64
+TARGET = iphone:clang::10.0
+
+include $(THEOS)/makefiles/common.mk
 
 TOOL_NAME = bw_mem lat_mem_rd
 
