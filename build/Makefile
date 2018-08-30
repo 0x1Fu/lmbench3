@@ -42,7 +42,11 @@ $(ASMS)/lat_mem_rd.s: $(OUT)/objs/lat_mem_rd/__/src/lat_mem_rd.s
 
 ios:
 ifeq ($(UNAME_S), Darwin)
+ifneq ($(THEOS),)
 	@make -f ios.mk debug=no messages=no
+else
+	$(warning THEOS is not set, bypass iOS build )
+endif
 endif
 
 clean:

@@ -8,7 +8,9 @@ LOCAL_SRC_FILES := \
 	../src/lib_stats.c \
 	../src/lib_debug.c \
 	../src/getopt.c \
-	../src/lib_sched.c
+	../src/lib_sched.c \
+    src/helpers.c
+LOCAL_CFLAGS := -DHAVE_BINDPROCESSOR
 LOCAL_DISABLE_FORMAT_STRING_CHECKS := true
 include $(BUILD_STATIC_LIBRARY)
 
