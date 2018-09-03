@@ -35,7 +35,6 @@ bw_mem() {
 }
 
 bw_mem_all() {
-	IFS=" " ncores="($@)"
 	ops=(
 		'rd' 'wr' 'rdwr' 'cp' 'fwr' 'frd' 'fcp' 'bzero' 'bcopy'
 	)
@@ -47,7 +46,7 @@ bw_mem_all() {
 	for op in ${ops[@]}; do
 		echo --- begin bw_mem $op ---
 		for size in ${sizes[@]}; do
-			bw_mem -P ${#ncores[@]} $size $op
+			bw_mem -P $1 $size $op
 		done
 		echo --- end ---
 	done
@@ -82,20 +81,20 @@ echo system: `uname -a`
 
 IFS="."
 for cores in ${all_cores[@]}; do
-	IFS=" " ncores="($cores)"
-	echo === begin "[$cores] (${#ncores[@]})" ===
+	ncores="${cores// /}"
+	echo === begin "[$cores] (${#ncores})" ===
 
-	if [ ${#ncores[@]} = "1" ] && [ $cores = "-" ]; then
+	if [ ${#ncores} = "1" ] && [ $cores = "-" ]; then
 		export LMBENCH_SCHED=
 	else
 		export LMBENCH_SCHED="CUSTOM $cores"
 	fi
 
-	if [ ${#ncores[@]} = "1" ]; then
-		lat_mem_rd_all ${#ncores[@]}
+	if [ ${#ncores} = "1" ]; then
+		lat_mem_rd_all ${#ncores}
 	fi
 
-	bw_mem_all $cores
+	bw_mem_all ${#ncores}
 
 	echo === end ===
 	echo
